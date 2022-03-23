@@ -1,9 +1,10 @@
 package main
 
 import (
+	"Booking-App/model"
+	"Booking-App/printBookings"
 	"Booking-App/userInput"
 	"Booking-App/welcome"
-	"fmt"
 )
 
 func main(){
@@ -18,34 +19,26 @@ func main(){
     5: "London",
    }
 
-  //User Data Struct
-  type UserData struct {
-    firstName string
-    lastName string
-    email string
-    numberOfTickets uint
-    venue string
-  }
 
   //Array of UserData
-  var bookings = make([]UserData, 0)
+  var bookings = make([]model.User, 0)
 
   //Welcome the user
   welcome.WelcomeMsgPrint("GoLang")
 
   //Take user input and store in variables inside main.
-  for i := 0; i < 5; i++ {
+  for i := 0; i < 2; i++ {
     firstName, lastName, email, numberOfTickets, venue := userInput.TakeUserInput(venues)
-    var userData = UserData {
-      firstName: firstName, 
-      lastName: lastName, 
-      email: email,
-      numberOfTickets: numberOfTickets,
-      venue: venue,
+    var userData = model.User {
+      FirstName: firstName, 
+      LastName: lastName, 
+      Email: email,
+      NumberOfTickets: numberOfTickets,
+      Venue: venue,
     }
     bookings = append(bookings, userData)
   }
 
   //Print the bookings to the console
-  fmt.Printf("List of bookings %v", bookings)
+  printBookings.PrintBookings(bookings)
 }

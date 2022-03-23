@@ -10,20 +10,22 @@ func TakeUserInput(venues map[int]string)(string, string, string, uint, string) 
   var email string
   var numberOfTickets uint
 	var venue int
-	fmt.Print("First Name: ")
+
+	fmt.Println("First Name: ")
 	fmt.Scan(&firstName)
-	fmt.Print("Last Name: ")
+	fmt.Println("Last Name: ")
 	fmt.Scan(&lastName)
-	fmt.Print("Email: ")
+	fmt.Println("Email: ")
 	fmt.Scan(&email)
-	fmt.Print("Number of Tickets: ")
+	fmt.Println("Number of Tickets: ")
 	fmt.Scan(&numberOfTickets)
 	fmt.Println("Please select a venue (number):")
 	for key, value := range venues {
-		fmt.Printf("%d. %s\n", key, value)
+		fmt.Println(key, value)
 	}
-	fmt.Print("Venue: ")
+	fmt.Println("Venue: ")
 	fmt.Scan(&venue)
+	fmt.Println("Thank You For Booking Your Tickets! See You Soon!")
 
 	return firstName, lastName, email, numberOfTickets, venues[venue]
 }
