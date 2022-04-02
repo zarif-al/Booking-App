@@ -84,20 +84,51 @@ func InputVenue(scanner *bufio.Scanner, venueLength int) int {
 	return int(number)
 }
 
-func CreateBooking(venues map[int]string, remainingTickets int) Booking {
+func checkUserExists(userName string, bookings []Booking) bool {
+	for _, booking := range bookings {
+		if booking.UserName == userName {
+			print.PrintError("User already exists")
+			return true
+		}
+	}
+	return false
+}
+
+func checkEmailExists(userName string, bookings []Booking) bool {
+	for _, booking := range bookings {
+		if booking.Email == userName {
+			print.PrintError("Email already exists")
+			return true
+		}
+	}
+	return false
+}
+
+func CreateBooking(venues map[int]string, remainingTickets int, bookings []Booking) Booking {
 	var userName string
 	var email string
 	var numberOfTickets uint
 	var venue int
 	var password string
 	scanner := bufio.NewScanner(os.Stdin)
-
 	userName = InputUsername(scanner)
-	password = InputPassword(scanner)
+	var userExists = checkUserExists(userName, bookings)
+	if userExists {
+		return CreateBooking(venues, remainingTickets, bookings)
+	}
 	email = InputEmail(scanner)
+	var emailExists = checkEmailExists(email, bookings)
+	if emailExists {
+		return CreateBooking(venues, remainingTickets, bookings)
+	}
+	password = InputPassword(scanner)
 	numberOfTickets = InputTicketNumber(scanner, remainingTickets)
 	fmt.Println("These are our venues:")
-	fmt.Println(venues)
+
+	for i := 1; i <= len(venues); i++ {
+		fmt.Println(color.Ize(color.Cyan, strconv.Itoa(i)+"."), venues[i])
+	}
+
 	venue = InputVenue(scanner, len(venues))
 	print.PrintSuccess("Thank You For Booking Your Tickets! See You Soon!")
 
@@ -112,33 +143,37 @@ func CreateBooking(venues map[int]string, remainingTickets int) Booking {
 	return newUser
 }
 
-func (u Booking) ChangeTicket(remainingTickets int) int {
+func (u Booking) ChangeTicket(remainingTickets int) (int, Booking) {
 	var numberOfTickets uint
-	var oldNumberOfTickets = u.NumberOfTickets
+	var oldNumberOfTickets = int(u.NumberOfTickets)
 
 	scanner := bufio.NewScanner(os.Stdin)
 	numberOfTickets = InputTicketNumber(scanner, remainingTickets)
-	u.NumberOfTickets = numberOfTickets
 
-	var difference = numberOfTickets - oldNumberOfTickets
+	u.NumberOfTickets = uint(numberOfTickets)
 
-	return int(difference)
+	var difference = int(numberOfTickets) - oldNumberOfTickets
+
+	return int(difference), u
 }
 
-func (u Booking) ChangeVenue(venues map[int]string) {
+func (u Booking) ChangeVenue(venues map[int]string) Booking {
 	var venue int
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("These are our venues:")
-	fmt.Println(venues)
+	for i := 1; i <= len(venues); i++ {
+		fmt.Println(color.Ize(color.Cyan, strconv.Itoa(i)+"."), venues[i])
+	}
 	venue = InputVenue(scanner, len(venues))
 	u.Venue = venues[venue]
+	return u
 }
 
 func (u Booking) PrintBookingDetails() {
 	fmt.Println()
-	fmt.Println(color.Ize(color.Cyan, "UserName: "), u.UserName)
-	fmt.Println(color.Ize(color.Cyan, "Email: "), u.Email)
-	fmt.Println(color.Ize(color.Cyan, "Number Of Tickets: "), u.NumberOfTickets)
-	fmt.Println(color.Ize(color.Cyan, "Venue: "), u.Venue)
+	fmt.Println(color.Ize(color.Cyan, "UserName:"), u.UserName)
+	fmt.Println(color.Ize(color.Cyan, "Email:"), u.Email)
+	fmt.Println(color.Ize(color.Cyan, "Number Of Tickets:"), u.NumberOfTickets)
+	fmt.Println(color.Ize(color.Cyan, "Venue:"), u.Venue)
 	fmt.Println()
 }

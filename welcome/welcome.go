@@ -39,7 +39,7 @@ func WelcomeSection(conferenceName string) int {
 	fmt.Println(color.InCyan("4."), "Print Your Booking Details")
 	fmt.Println(color.InCyan("5."), "Cancel Booking")
 	fmt.Println(color.InCyan("6."), "Exit")
-	fmt.Print(color.InBlue("Please select an option: "))
+	fmt.Print(color.InYellow("Please select an option: "))
 	option = InputOption(scanner)
 	return option
 }

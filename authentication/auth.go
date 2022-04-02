@@ -6,6 +6,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/TwiN/go-color"
 )
 
 func InputValidString(scanner *bufio.Scanner, msg string) string {
@@ -22,8 +24,8 @@ func Login(bookings []model.Booking) (model.Booking, bool) {
 	var userName string
 	var password string
 	scanner := bufio.NewScanner(os.Stdin)
-	userName = InputValidString(scanner, "UserName: ")
-	password = InputValidString(scanner, "Password: ")
+	userName = InputValidString(scanner, color.InCyan("UserName: "))
+	password = InputValidString(scanner, color.InCyan("Password: "))
 	for _, user := range bookings {
 		if user.UserName == userName && user.Password == password {
 			return user, true

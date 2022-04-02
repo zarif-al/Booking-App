@@ -19,5 +19,5 @@ func PrintSuccess(success string) {
 }
 
 func PrintInputMsg(msg string) {
-	fmt.Print(color.Ize(color.Blue, msg))
+	fmt.Print(color.Ize(color.Cyan, msg))
 }

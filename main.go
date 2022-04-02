@@ -31,7 +31,7 @@ func main() {
 		switch option {
 		case 1:
 			if remainingTickets > 0 {
-				var booking = model.CreateBooking(venues, remainingTickets)
+				var booking = model.CreateBooking(venues, remainingTickets, bookings)
 				remainingTickets = remainingTickets - int(booking.NumberOfTickets)
 				print.PrintWarning("Remaining tickets: " + strconv.Itoa(remainingTickets))
 				bookings = append(bookings, booking)
@@ -42,8 +42,14 @@ func main() {
 		case 2:
 			var booking, success = auth.Login(bookings)
 			if success {
-				difference := booking.ChangeTicket(remainingTickets)
+				difference, booking := booking.ChangeTicket(remainingTickets)
+				for i := 0; i < len(bookings); i++ {
+					if bookings[i].UserName == booking.UserName {
+						bookings[i] = booking
+					}
+				}
 				remainingTickets = remainingTickets - difference
+				print.PrintSuccess("Your tickets have been updated!")
 				print.PrintWarning("Remaining tickets: " + strconv.Itoa(remainingTickets))
 			} else {
 				print.PrintError("Invalid username or password!")
@@ -52,7 +58,13 @@ func main() {
 		case 3:
 			var booking, success = auth.Login(bookings)
 			if success {
-				booking.ChangeVenue(venues)
+				booking := booking.ChangeVenue(venues)
+				for i := 0; i < len(bookings); i++ {
+					if bookings[i].UserName == booking.UserName {
+						bookings[i] = booking
+					}
+				}
+				print.PrintSuccess("Venue changed!")
 			} else {
 				print.PrintError("Invalid username or password!")
 			}
@@ -69,9 +81,9 @@ func main() {
 				index := sort.Search(len(bookings), func(i int) bool {
 					return bookings[i].UserName == booking.UserName
 				})
-
 				bookings[index] = bookings[len(bookings)-1]
 				bookings = bookings[:len(bookings)-1]
+				print.PrintSuccess("Booking cancelled!")
 			} else {
 				print.PrintError("Invalid username or password!")
 			}
